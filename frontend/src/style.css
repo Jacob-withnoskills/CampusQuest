@@ -1,0 +1,744 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: Manrope, sans-serif;
+  color: #f4f4ef;
+  background: #101511;
+  font-synthesis: none
+}
+
+* {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #101511
+}
+
+button,
+input {
+  font: inherit
+}
+
+button {
+  cursor: pointer
+}
+
+.app {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 80% 30%, #30402555, transparent 40%), #101511;
+  display: flex;
+  flex-direction: column
+}
+
+.topbar {
+  height: 76px;
+  padding: 0 6vw;
+  border-bottom: 1px solid #ffffff18;
+  display: flex;
+  align-items: center;
+  justify-content: space-between
+}
+
+.brand {
+  border: 0;
+  background: none;
+  color: #f4f4ef;
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 11px
+}
+
+.brand b,
+em {
+  color: #c7f36a;
+  font-style: normal
+}
+
+.logo {
+  border: 1px solid #c7f36a;
+  color: #c7f36a;
+  padding: 9px;
+  font-size: 11px
+}
+
+.event-tag {
+  font: 10px 'DM Mono';
+  color: #b6c1ae;
+  letter-spacing: 1px
+}
+
+.event-tag:first-letter {
+  color: #c7f36a
+}
+
+.hero {
+  width: min(1240px, 88%);
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 70px 0 30px
+}
+
+.eyebrow {
+  font: 10px 'DM Mono';
+  letter-spacing: 1.7px;
+  color: #c7f36a
+}
+
+.hero h1,
+.intro h1,
+.login h1,
+.dash-head h1 {
+  font-size: clamp(48px, 6vw, 78px);
+  line-height: 1.05;
+  letter-spacing: -4px;
+  margin: 24px 0
+}
+
+.hero-copy>p,
+.intro>p,
+.login>p,
+.dash-head>p {
+  color: #a5afa0;
+  font-size: 13px;
+  line-height: 1.8;
+  max-width: 470px
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px
+}
+
+.primary,
+.secondary {
+  border: 0;
+  padding: 16px 20px;
+  font-size: 11px;
+  font-weight: 800
+}
+
+.primary {
+  background: #c7f36a;
+  color: #172011
+}
+
+.primary:hover {
+  background: #d8ff8c
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid #53604c;
+  color: #f4f4ef
+}
+
+.primary span {
+  margin-left: 20px
+}
+
+.hint {
+  font-size: 10px;
+  color: #9da895;
+  margin-top: 25px
+}
+
+.art {
+  height: 400px;
+  display: grid;
+  place-items: center;
+  position: relative
+}
+
+.orbit {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border: 1px solid #c7f36a24;
+  border-radius: 50%
+}
+
+.orbit2 {
+  width: 450px;
+  height: 450px;
+  border-style: dashed
+}
+
+.map {
+  z-index: 1;
+  width: min(370px, 90%);
+  background: #202a20;
+  border: 1px solid #58664c;
+  padding: 18px;
+  transform: rotate(3deg);
+  box-shadow: 0 25px 70px #0008
+}
+
+.map-head,
+.map-foot {
+  display: flex;
+  justify-content: space-between;
+  font: 9px 'DM Mono';
+  letter-spacing: 1px;
+  color: #b4c0aa
+}
+
+.live,
+.map-foot strong {
+  color: #c7f36a
+}
+
+.map-grid {
+  height: 205px;
+  margin: 15px 0;
+  background-color: #263426;
+  background-image: linear-gradient(#c7f36a12 1px, transparent 1px), linear-gradient(90deg, #c7f36a12 1px, transparent 1px);
+  background-size: 27px 27px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: #c7f36a;
+  font-size: 25px
+}
+
+.route {
+  position: absolute;
+  width: 180px;
+  border-top: 2px dashed #c7f36a;
+  transform: rotate(-35deg)
+}
+
+.pin {
+  position: absolute;
+  background: #c7f36a;
+  color: #172011;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  font-style: normal;
+  font-size: 17px
+}
+
+.p1 {
+  left: 35px;
+  top: 125px
+}
+
+.p2 {
+  left: 155px;
+  top: 50px
+}
+
+.p3 {
+  right: 35px;
+  bottom: 25px
+}
+
+.sticker {
+  position: absolute;
+  z-index: 2;
+  padding: 12px;
+  background: #c7f36a;
+  color: #172011;
+  font: 9px 'DM Mono';
+  letter-spacing: 1px
+}
+
+.sticker1 {
+  top: 38px;
+  right: 0;
+  transform: rotate(4deg)
+}
+
+.sticker2 {
+  bottom: 35px;
+  left: 0;
+  background: #f0f0e8;
+  transform: rotate(-4deg)
+}
+
+.stats {
+  grid-column: 1/-1;
+  border-top: 1px solid #ffffff24;
+  padding-top: 22px;
+  display: flex;
+  gap: 7vw;
+  align-items: center;
+  margin-top: 25px
+}
+
+.stats div {
+  display: flex;
+  align-items: center;
+  gap: 10px
+}
+
+.stats b {
+  font-size: 23px;
+  color: #c7f36a
+}
+
+.stats span,
+.stats small {
+  font: 9px 'DM Mono';
+  letter-spacing: 1px;
+  color: #9ba795
+}
+
+.stats small {
+  margin-left: auto
+}
+
+.form-layout {
+  width: min(1100px, 88%);
+  margin: auto;
+  padding: 65px 0;
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 8vw;
+  align-items: start
+}
+
+.intro {
+  padding-top: 35px
+}
+
+.intro h1 {
+  font-size: clamp(48px, 5vw, 65px)
+}
+
+.callout {
+  margin-top: 30px;
+  padding: 18px;
+  border: 1px solid #46533d;
+  background: #1a2319;
+  display: grid;
+  gap: 8px;
+  font-size: 11px
+}
+
+.callout span {
+  color: #a6b19e;
+  font-size: 10px;
+  line-height: 1.6
+}
+
+.panel {
+  background: #1a211a;
+  border: 1px solid #3e4a38;
+  padding: clamp(20px, 3vw, 34px)
+}
+
+.panel-head,
+.members-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.panel-head small,
+.count,
+.members-title span {
+  font: 9px 'DM Mono';
+  color: #a5b09d;
+  letter-spacing: 1px
+}
+
+.panel h2 {
+  font-size: 23px;
+  margin: 8px 0 25px
+}
+
+.count {
+  color: #c7f36a;
+  border: 1px solid #536347;
+  padding: 8px
+}
+
+.panel label {
+  display: block;
+  font: 9px 'DM Mono';
+  letter-spacing: 1px;
+  color: #b6c1ae;
+  margin: 0 0 9px
+}
+
+.field {
+  height: 47px;
+  width: 100%;
+  background: #111811;
+  border: 1px solid #465241;
+  color: white;
+  padding: 0 13px;
+  font-size: 12px;
+  outline: none
+}
+
+.field:focus {
+  border-color: #c7f36a
+}
+
+.field::placeholder,
+.member input::placeholder {
+  color: #667260
+}
+
+.members-title {
+  margin: 24px 0 10px
+}
+
+.member {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  background: #151c15;
+  border: 1px solid #3d4939;
+  margin-top: 7px
+}
+
+.member>span {
+  font: 10px 'DM Mono';
+  color: #c7f36a
+}
+
+.member input {
+  min-width: 0;
+  flex: 1;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: white;
+  font-size: 11px
+}
+
+.member small,
+.roster small {
+  font: 8px 'DM Mono';
+  color: #c7f36a;
+  letter-spacing: 1px
+}
+
+.full {
+  width: 100%;
+  margin-top: 22px
+}
+
+.switch {
+  text-align: center;
+  color: #a6b19e;
+  font-size: 10px
+}
+
+.switch button {
+  background: none;
+  border: 0;
+  color: #c7f36a;
+  font-weight: 800;
+  font-size: 10px
+}
+
+.message {
+  background: #2b3926;
+  border-left: 2px solid #c7f36a;
+  color: #e0e9d9;
+  padding: 10px;
+  font-size: 11px;
+  line-height: 1.5
+}
+
+.login {
+  width: min(470px, 90%);
+  margin: auto;
+  text-align: center;
+  padding: 55px 0 75px
+}
+
+.login-logo {
+  width: 58px;
+  height: 58px;
+  border: 1px solid #c7f36a;
+  color: #c7f36a;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 25px;
+  font-weight: 800
+}
+
+.login h1 {
+  font-size: 58px
+}
+
+.login>p {
+  margin: 0 auto 25px;
+  font-size: 12px
+}
+
+.login .panel {
+  text-align: left
+}
+
+.spaced {
+  margin-top: 18px !important
+}
+
+.back {
+  display: block;
+  background: none;
+  border: 0;
+  color: #c7f36a;
+  font-size: 10px;
+  margin: 22px auto
+}
+
+.dashboard {
+  width: min(1100px, 88%);
+  margin: auto;
+  padding: 60px 0 70px
+}
+
+.dash-head h1 {
+  font-size: clamp(42px, 5vw, 62px);
+  margin: 15px 0 8px
+}
+
+.dash-head>p {
+  margin-top: 0
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 16px;
+  margin-top: 25px
+}
+
+.team-id {
+  font-size: 36px;
+  color: #c7f36a;
+  font-weight: 800;
+  margin: 12px 0 22px
+}
+
+.pin-display {
+  display: flex;
+  align-items: center;
+  gap: 18px
+}
+
+.pin-display span,
+.pin-display small {
+  font: 9px 'DM Mono';
+  color: #a4af9c
+}
+
+.pin-display b {
+  font-size: 20px;
+  letter-spacing: 4px
+}
+
+.pin-display small {
+  margin-left: auto;
+  color: #d4c27c
+}
+
+.panel hr {
+  border: 0;
+  border-top: 1px solid #3b4737;
+  margin: 25px 0
+}
+
+.progress {
+  height: 5px;
+  background: #394436;
+  margin-top: 15px
+}
+
+.progress i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #c7f36a
+}
+
+.progress-caption {
+  display: flex;
+  justify-content: space-between;
+  color: #9da895;
+  font-size: 9px;
+  margin-top: 9px
+}
+
+.progress-caption b {
+  color: #c7f36a
+}
+
+.roster {
+  border-top: 1px solid #3a4636;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px
+}
+
+.roster>span {
+  width: 27px;
+  height: 27px;
+  border: 1px solid #59674d;
+  color: #c7f36a;
+  display: grid;
+  place-items: center;
+  font-weight: 800
+}
+
+.roster small {
+  margin-left: auto
+}
+
+footer {
+  height: 55px;
+  border-top: 1px solid #ffffff18;
+  padding: 0 6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #778271;
+  font: 9px 'DM Mono';
+  letter-spacing: 1px
+}
+
+footer span {
+  color: #778271
+}
+
+@media(max-width:760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 55px
+  }
+
+  .art {
+    height: 330px
+  }
+
+  .orbit {
+    width: 290px;
+    height: 290px
+  }
+
+  .orbit2 {
+    width: 370px;
+    height: 370px
+  }
+
+  .stats {
+    gap: 18px;
+    flex-wrap: wrap
+  }
+
+  .stats small {
+    width: 100%;
+    margin: 5px 0
+  }
+
+  .form-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 45px 0
+  }
+
+  .intro {
+    padding: 0
+  }
+
+  .intro h1 {
+    margin: 16px 0
+  }
+
+  .callout {
+    margin-top: 18px
+  }
+
+  .dash-grid {
+    grid-template-columns: 1fr
+  }
+}
+
+@media(max-width:480px) {
+  .topbar {
+    height: 65px;
+    padding: 0 18px
+  }
+
+  .hero,
+  .form-layout,
+  .dashboard {
+    width: 90%
+  }
+
+  .hero h1 {
+    font-size: 52px;
+    letter-spacing: -3px
+  }
+
+  .actions {
+    display: grid
+  }
+
+  .actions button {
+    width: 100%
+  }
+
+  .art {
+    height: 285px
+  }
+
+  .map-grid {
+    height: 170px
+  }
+
+  .stats {
+    gap: 15px
+  }
+
+  .stats b {
+    font-size: 19px
+  }
+
+  .stats span {
+    font-size: 8px
+  }
+
+  .panel {
+    padding: 20px 15px
+  }
+
+  .login h1 {
+    font-size: 48px
+  }
+
+  .pin-display {
+    gap: 9px
+  }
+
+  .pin-display small {
+    font-size: 7px
+  }
+
+  footer {
+    padding: 0 18px;
+    font-size: 8px
+  }
+}

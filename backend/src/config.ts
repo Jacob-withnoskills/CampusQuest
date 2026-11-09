@@ -12,5 +12,6 @@ export const config = {
   port: Number(required('PORT', '4000')),
   databaseUrl: required('DATABASE_URL'),
   redisUrl: required('REDIS_URL', 'redis://127.0.0.1:6379'),
-  frontendOrigin: required('FRONTEND_ORIGIN', 'http://localhost:5173')
+  frontendOrigin: required('FRONTEND_ORIGIN', 'http://localhost:5173'),
+  authSecret: required('AUTH_SECRET')
 };

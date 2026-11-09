@@ -4,17 +4,49 @@ import { Server as SocketIOServer } from 'socket.io';
 import { config } from './config.js';
 import { checkDatabase, pool } from './db.js';
 import { checkRedis, redis } from './redis.js';
+import { teamRoutes } from './routes/teams.js';
+import { roundRoutes } from './routes/rounds.js';
+import { challengeRoutes } from './routes/challenges.js';
+import { qrRoutes } from './routes/qr.js';
+import { submissionRoutes } from './routes/submissions.js';
+import { leaderboardRoutes } from './routes/leaderboard.js';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    io: SocketIOServer;
+  }
+}
 
 const app = Fastify({ logger: true });
 
 await app.register(cors, {
   origin: config.frontendOrigin,
-  methods: ['GET', 'POST', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+});
+await app.register(teamRoutes, { prefix: '/api/teams' });
+await app.register(roundRoutes, { prefix: '/api/rounds' });
+await app.register(challengeRoutes, {
+  prefix: '/api/challenges'
+});
+await app.register(qrRoutes, {
+  prefix: '/api/qr'
+});
+await app.register(submissionRoutes, {
+  prefix: '/api/submissions'
+});
+
+await app.register(leaderboardRoutes, {
+  prefix: '/api/leaderboard'
 });
 
 const io = new SocketIOServer(app.server, {
-  cors: { origin: config.frontendOrigin, methods: ['GET', 'POST'] }
+  cors: {
+    origin: config.frontendOrigin,
+    methods: ['GET', 'POST']
+  }
 });
+
+app.decorate('io', io);
 
 io.on('connection', (socket) => {
   app.log.info({ socketId: socket.id }, 'Client connected');

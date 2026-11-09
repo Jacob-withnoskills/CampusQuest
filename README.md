@@ -1,677 +1,657 @@
-# Campus Quest — QR Treasure Hunt Management System
+# Campus Quest --- Project Guide, Run Instructions and Development Status
 
-## 1. Project Overview
+**Last updated:** 9 November 2026\
+**Project:** Campus Quest --- QR Treasure Hunt Management System\
+**Development environment:** Windows, PowerShell, Node.js, PostgreSQL
+and Memurai
 
-Campus Quest is a local-network-based QR treasure hunt web application designed for college events.
+------------------------------------------------------------------------
 
-The application allows students to participate in teams using one smartphone per team. Teams register, log in, scan QR checkpoints, solve clues, submit answers, earn points and compete through multiple knockout rounds.
+## 1. Project overview
 
-The system also provides an administrative dashboard through which event organizers can manage teams, checkpoints, clues, scores, rounds and event progress.
+Campus Quest is a web application for running a team-based QR treasure
+hunt at a college event. Teams use one smartphone to log in, discover
+checkpoints, solve challenges, submit answers and earn points.
+Organizers use an administrative interface to control rounds and monitor
+game progress.
 
-### Planned Event Configuration
+### Planned event configuration
 
-| Parameter           | Configuration            |
-| ------------------- | ------------------------ |
-| Total participants  | Approximately 200        |
-| Total teams         | 40                       |
-| Members per team    | 5                        |
-| Devices per team    | 1 smartphone             |
-| Event duration      | 2–3 hours                |
-| Competition format  | 4 knockout levels        |
-| QR checkpoints      | Configurable             |
-| Hosting             | Local college network    |
-| Internet dependency | Designed to work locally |
+  Item                 Planned configuration
+  -------------------- -----------------------------
+  Participants         Approximately 200
+  Teams                Approximately 40
+  Members per team     Approximately 5
+  Devices              One smartphone per team
+  Event duration       Approximately 2--3 hours
+  Competition format   Knockout rounds
+  Checkpoints          Configurable QR checkpoints
+  Hosting              College local network
 
-**Important:** These are the planned event requirements. The complete functionality has not yet been implemented.
+These are event planning targets, not proof that the application has
+already passed a 200-person live load test.
 
----
+## 2. Technology stack
 
-## 2. Technology Stack
+  -----------------------------------------------------------------------
+  Layer                   Technology              Purpose
+  ----------------------- ----------------------- -----------------------
+  Frontend                React, TypeScript       User interface and
+                                                  application logic
 
-Campus Quest uses a modern full-stack architecture consisting of frontend, backend, database, caching and real-time communication technologies.
+  Frontend tooling        Vite                    Local development
+                                                  server and production
+                                                  build
 
-### 2.1 Frontend Technologies
+  Styling                 Tailwind CSS 4, CSS     Layout and responsive
+                                                  styling
 
-| Technology / Language | Purpose                     | Why We Use It                                                                             |
-| --------------------- | --------------------------- | ----------------------------------------------------------------------------------------- |
-| HTML5                 | Webpage structure           | Defines the structure of pages, forms and application elements.                           |
-| CSS3                  | Styling and layouts         | Creates responsive layouts, animations, colors and visual components.                     |
-| JavaScript            | Programming language        | Provides browser-side logic and interactive functionality.                                |
-| TypeScript            | Frontend programming        | Adds static typing, reduces errors and makes large React applications easier to maintain. |
-| React                 | Frontend library            | Builds reusable components and interactive interfaces.                                    |
-| Vite                  | Development and build tool  | Provides fast development startup, hot reloading and optimized production builds.         |
-| Tailwind CSS 4        | CSS framework               | Provides utility classes for consistent and responsive styling.                           |
-| PWA Plugin            | Progressive Web App support | Helps configure installable web application functionality and service-worker support.     |
+  PWA                     Vite PWA plugin         Progressive Web App
+                                                  configuration
 
-**Why React and TypeScript?**
+  Backend                 Node.js, TypeScript,    API and game business
+                          Fastify                 logic
 
-The application contains multiple screens, including registration, team dashboards, QR scanning, challenges, leaderboards and administration.
+  Real-time               Socket.IO               Live leaderboard and
+                                                  round notifications
 
-React allows us to create reusable components, while TypeScript helps maintain reliable data structures and application logic.
+  Database                PostgreSQL 18           Persistent teams,
+                                                  challenges, scans,
+                                                  submissions and scores
 
-### 2.2 Backend Technologies
+  Cache                   Memurai                 Cache service for
+                          (Redis-compatible)      development
 
-| Technology / Language | Purpose                     | Why We Use It                                                                                      |
-| --------------------- | --------------------------- | -------------------------------------------------------------------------------------------------- |
-| Node.js               | JavaScript runtime          | Executes JavaScript and TypeScript backend applications outside the browser.                       |
-| TypeScript            | Backend programming         | Provides type safety for APIs, database operations and business logic.                             |
-| Fastify               | Backend framework           | Provides a lightweight, high-performance framework for REST APIs.                                  |
-| Socket.IO             | Real-time communication     | Sends live leaderboard updates, event announcements and game-state changes.                        |
-| REST API              | Client-server communication | Allows the frontend to request registration, login, checkpoints, submissions and other operations. |
+  QR                      QR token validation and Checkpoint
+                          QR-code generation      identification
 
-**Why Node.js and Fastify?**
+  Version control         Git and GitHub          Source control and
+                                                  collaboration
+  -----------------------------------------------------------------------
 
-Node.js allows the frontend and backend to share JavaScript/TypeScript concepts and data structures.
+PostgreSQL is the permanent source of truth. Scores, submissions and
+qualification decisions must be validated and stored by the backend, not
+calculated or trusted from the browser.
 
-Fastify provides an organized way to implement API endpoints and validate incoming requests.
+## 3. How to run Campus Quest on Windows
 
-Socket.IO will support real-time updates without requiring students to repeatedly refresh their pages.
+### 3.1 Prerequisites
 
-### 2.3 Database Technologies
+Install and configure:
 
-| Technology / Language | Purpose                 | Why We Use It                                                                              |
-| --------------------- | ----------------------- | ------------------------------------------------------------------------------------------ |
-| PostgreSQL            | Relational database     | Permanently stores teams, members, checkpoints, submissions, scores and event information. |
-| SQL                   | Database query language | Creates tables, retrieves records, updates information and manages relationships.          |
-| Database constraints  | Data integrity          | Prevent duplicate registrations, invalid references and duplicate score awards.            |
+-   Node.js and npm.
+-   PostgreSQL 18.
+-   Memurai or the configured Redis-compatible service.
+-   Git (optional, for source control).
+-   A code editor such as Visual Studio Code.
 
-**Why PostgreSQL?**
+The project folder used in the current development environment is:
 
-PostgreSQL is the permanent source of truth for the event.
-
-It provides:
-- Relational data management.
-- Primary and foreign keys.
-- Transactions.
-- Unique constraints.
-- Reliable score and submission storage.
-- Consistent data during simultaneous requests.
-
-### 2.4 Cache Technologies
-
-| Technology             | Purpose                              | Why We Use It                                                        |
-| ---------------------- | ------------------------------------ | -------------------------------------------------------------------- |
-| Redis-compatible cache | Temporary data storage               | Stores frequently accessed information and supports fast operations. |
-| Memurai                | Windows-compatible Redis alternative | Allows Redis-compatible caching during Windows development.          |
-
-**Why Memurai?**
-
-Memurai provides a Redis-compatible service for Windows.
-
-It can be used for caching, temporary game-state information and other performance-related operations.
-
-PostgreSQL remains the permanent source of truth. Cache data must never be the only record of a score or submission.
-
-The licensing and connection limits of the selected Memurai edition must be checked before the event.
-
-### 2.5 Development and Deployment Tools
-
-| Tool                    | Purpose                                  |
-| ----------------------- | ---------------------------------------- |
-| Visual Studio Code      | Source-code editing                      |
-| Windows PowerShell      | Running development commands             |
-| npm                     | Installing and managing dependencies     |
-| Git                     | Version control                          |
-| GitHub                  | Source-code repository and collaboration |
-| pgAdmin                 | PostgreSQL database administration       |
-| Browser Developer Tools | Frontend debugging                       |
-| Windows Firewall        | Controlling local-network access         |
-
----
-
-## 3. Complete Application Architecture
-
-The application follows a client-server architecture.
-
-```text
-                 STUDENT SMARTPHONES
-                   (40 TEAM DEVICES)
-                          |
-                          |
-                     CAMPUS WI-FI
-                          |
-                          |
-                REACT FRONTEND (VITE)
-                          |
-                 REST API / SOCKET.IO
-                          |
-                          |
-                NODE.JS + FASTIFY
-                          |
-              -----------------------
-              |          |          |
-              |          |          |
-          PostgreSQL  Memurai   Socket.IO
-              |          |          |
-              |          |          |
-          Permanent   Temporary   Live updates
-          data        cache       to clients
-              |
-              |
-       GAME MANAGEMENT
-              |
-       ------------------
-       |        |       |
-      Teams   Scores  Checkpoints
+``` text
+C:\Users\Asus\Downloads\campus-quest-starter
 ```
 
-### Data Flow
+The folder contains two separate applications:
 
-1. A student opens the Campus Quest website.
-2. The team registers using one smartphone.
-3. The frontend sends registration information to the backend.
-4. The backend validates the information.
-5. PostgreSQL stores the team and member details.
-6. The team logs in using its credentials.
-7. The team scans a physical QR checkpoint.
-8. The backend validates the QR token and team eligibility.
-9. The team submits its answer.
-10. The backend checks the answer and calculates the score.
-11. PostgreSQL records the submission and score.
-12. Socket.IO broadcasts updated leaderboard information.
-
-All scoring and qualification decisions must be performed by the backend, never by the browser.
-
----
-
-## 4. Programming Languages Used and Their Roles
-
-The project uses the following languages and formats:
-
-### TypeScript
-Used for frontend and backend application logic.
-
-Examples:
-- React components.
-- API controllers.
-- Authentication.
-- QR validation.
-- Scoring algorithms.
-- Socket.IO events.
-- Database service functions.
-
-### JavaScript
-The underlying language of the Node.js and React ecosystem. TypeScript is compiled into JavaScript for execution.
-
-### HTML5
-Used to structure application pages, forms, navigation, buttons and content.
-
-### CSS3
-Used to design the user interface, including:
-- Responsive layouts.
-- Mobile-friendly screens.
-- Dashboard designs.
-- Animations.
-- QR scanning interface.
-- Leaderboard presentation.
-
-### SQL
-Used to create and manage PostgreSQL database objects.
-
-Examples:
-- CREATE TABLE
-- INSERT
-- SELECT
-- UPDATE
-- DELETE
-- JOIN
-- Transactions and constraints.
-
-### JSON
-Used as the data-exchange format between the frontend and backend.
-
-Example:
-
-```json
-{
-  "teamId": "CQ-1001",
-  "checkpointId": "CP-01",
-  "answer": "Example answer"
-}
-```
-
-### PowerShell
-Used to install dependencies, start development servers, inspect services and manage the application on Windows.
-
----
-
-## 5. Application Modules and Functional Workflow
-
-### Module 1: Student Landing Page
-
-The landing page is the first screen students see.
-
-Planned features:
-- Campus Quest branding.
-- Event introduction.
-- How to play.
-- Event rules.
-- Registration button.
-- Team login button.
-- Event information.
-- Contact and support information.
-
-### Module 2: Team Registration
-
-Each team registers using one smartphone.
-
-Features:
-- Team name.
-- Five team member names.
-- Team leader identification.
-- Unique Team ID.
-- Secure PIN or authentication credentials.
-- Registration confirmation.
-
-The backend will validate registrations and store them in PostgreSQL.
-
-### Module 3: Team Login
-
-Features:
-- Team ID.
-- PIN or secure authentication.
-- Session management.
-- One active device session per team.
-- Logout functionality.
-
-### Module 4: Team Dashboard
-
-The dashboard will display:
-- Team name and Team ID.
-- Team member details.
-- Current score.
-- Current rank.
-- Current competition round.
-- Checkpoint progress.
-- Remaining time.
-- Instructions and announcements.
-
-### Module 5: QR Code Checkpoint System
-
-Each physical checkpoint will have a unique QR code.
-
-Features:
-- QR code generation.
-- QR scanning using the smartphone camera.
-- Unique checkpoint token.
-- Server-side token validation.
-- Team eligibility verification.
-- Duplicate scan prevention.
-- Checkpoint completion status.
-
-The QR code will contain a checkpoint identifier or secure token, never the answer.
-
-### Module 6: Clues and Challenges
-
-Features:
-- Display clues after checkpoint validation.
-- Riddles and questions.
-- Answer submission form.
-- Server-side answer verification.
-- Attempt limits.
-- Time-based challenges, if required.
-- Correct and incorrect answer feedback.
-
-### Module 7: Scoring System
-
-The backend will calculate scores based on event rules.
-
-Possible scoring parameters:
-- Correct answer.
-- Time taken.
-- Checkpoint completion.
-- Penalties.
-- Bonus points.
-
-Every accepted submission will have a unique identifier and will be protected against duplicate score awards using database constraints and transactions.
-
-### Module 8: Four Knockout Rounds
-
-The system will support four configurable competition levels.
-
-Planned workflow:
-
-1. Teams begin in the first round.
-2. Teams complete assigned checkpoints and challenges.
-3. The server calculates the scores.
-4. The admin reviews the qualification results.
-5. Qualified teams advance to the next round.
-6. The process continues until the final round.
-7. Final results determine the winners.
-
-The exact number of qualifying teams per round will be configurable by the admin.
-
-### Module 9: Live Leaderboard
-
-The leaderboard will display:
-- Team ranking.
-- Team name.
-- Total score.
-- Completed checkpoints.
-- Current round.
-- Qualification status.
-
-Socket.IO will broadcast updates when scores or qualification statuses change.
-
-### Module 10: Admin Dashboard
-
-The admin dashboard will be used by event organizers.
-
-Planned features:
-- Secure administrator login.
-- View registered teams.
-- Search and filter teams.
-- Activate or deactivate teams.
-- Manage checkpoints.
-- Generate QR codes.
-- Create and edit clues.
-- Configure answer validation.
-- Start and stop the event.
-- Control competition rounds.
-- Manage qualification.
-- Monitor submissions.
-- View scores and leaderboard.
-- Publish announcements.
-- Export event results.
-
----
-
-## 6. Current Development Status
-
-The infrastructure has been configured and the first frontend prototype has been prepared.
-
-| Component               | Current status |
-| ----------------------- | -------------- |
-| Node.js installation    | Completed      |
-| PostgreSQL installation | Completed      |
-| PostgreSQL service      | Running        |
-| Campus Quest database   | Created        |
-| Database connectivity   | Verified       |
-| Memurai installation    | Completed      |
-| Cache connectivity      | Verified       |
-| Backend setup           | Completed      |
-| Backend health endpoint | Working        |
-| React frontend setup    | Completed      |
-| Landing page prototype  | Implemented    |
-| Team registration UI    | Implemented    |
-| Team login UI           | Implemented    |
-| Basic team dashboard UI | Implemented    |
-
-### Current Backend Health Check
-
-Endpoint:
-
-`http://localhost:4000/api/health`
-
-Expected response:
-
-```json
-{
-  "status": "ok",
-  "service": "campus-quest-api",
-  "checks": {
-    "database": "ok",
-    "cache": "ok"
-  }
-}
-```
-
-This verifies infrastructure connectivity, not the completion of game functionality.
-
----
-
-## 7. Features Yet to Be Developed
-
-The following work remains before Campus Quest can be used for a real event.
-
-### Phase 1 — Complete Frontend Design
-
-- [ ] Final student landing page.
-- [ ] How to play page.
-- [ ] Event rules page.
-- [ ] Registration page refinement.
-- [ ] Login page refinement.
-- [ ] Complete team dashboard.
-- [ ] Admin login page.
-- [ ] Admin dashboard.
-- [ ] QR scanner page.
-- [ ] Clue and challenge page.
-- [ ] Answer submission page.
-- [ ] Leaderboard page.
-- [ ] Round results page.
-- [ ] Final winners page.
-- [ ] Mobile responsive testing.
-
-### Phase 2 — Database and Backend Development
-
-- [ ] Finalize database schema.
-- [ ] Implement team registration API.
-- [ ] Implement team login API.
-- [ ] Implement secure authentication.
-- [ ] Implement session management.
-- [ ] Enforce one active device per team.
-- [ ] Implement admin authentication.
-- [ ] Implement team management APIs.
-- [ ] Implement checkpoint management APIs.
-- [ ] Implement QR token validation.
-- [ ] Implement clue management.
-- [ ] Implement answer validation.
-- [ ] Implement score calculation.
-- [ ] Implement duplicate submission protection.
-
-### Phase 3 — Game Management
-
-- [ ] Create four knockout rounds.
-- [ ] Configure qualification rules.
-- [ ] Assign checkpoints to rounds.
-- [ ] Implement team-specific checkpoint routes.
-- [ ] Implement event start and stop controls.
-- [ ] Implement countdown timer.
-- [ ] Implement score penalties and bonuses.
-- [ ] Implement tie-breaking rules.
-- [ ] Implement final winner calculation.
-
-### Phase 4 — Real-Time Features
-
-- [ ] Integrate Socket.IO.
-- [ ] Live leaderboard.
-- [ ] Live team progress.
-- [ ] Admin monitoring dashboard.
-- [ ] Event announcements.
-- [ ] Real-time round updates.
-- [ ] Connection recovery and reconnection handling.
-
-### Phase 5 — QR Scanner and Mobile Experience
-
-- [ ] Integrate browser camera access.
-- [ ] Implement QR scanning.
-- [ ] Handle invalid QR codes.
-- [ ] Handle already-used checkpoints.
-- [ ] Provide scanning feedback.
-- [ ] Test Android devices.
-- [ ] Test iOS devices.
-- [ ] Test different browsers.
-- [ ] Configure PWA installation.
-- [ ] Evaluate trusted local HTTPS for service-worker functionality.
-
-### Phase 6 — Security and Testing
-
-- [ ] Password hashing.
-- [ ] Secure session or token authentication.
-- [ ] Input validation.
-- [ ] API rate limiting.
-- [ ] Admin authorization.
-- [ ] QR token security.
-- [ ] Duplicate request protection.
-- [ ] Database transaction testing.
-- [ ] Simultaneous QR scanning tests.
-- [ ] Concurrent submission tests.
-- [ ] Network interruption tests.
-- [ ] Recovery after server restart.
-- [ ] Load testing for approximately 200 participants.
-
-### Phase 7 — Deployment
-
-- [ ] Configure production frontend build.
-- [ ] Configure production backend.
-- [ ] Configure LAN reverse proxy.
-- [ ] Configure HTTPS if required.
-- [ ] Configure Windows Firewall.
-- [ ] Test campus Wi-Fi coverage.
-- [ ] Test all 40 teams simultaneously.
-- [ ] Prepare database backup.
-- [ ] Prepare event-day recovery plan.
-- [ ] Conduct a complete mock treasure hunt.
-
----
-
-## 8. Security and Data Integrity
-
-The following principles are mandatory for event deployment:
-
-1. PostgreSQL is the permanent source of truth.
-2. The frontend must never determine scores.
-3. Qualification decisions must be performed by the backend.
-4. QR codes must not reveal answers.
-5. Each QR checkpoint must have a unique token.
-6. Duplicate submissions must not generate duplicate points.
-7. Database transactions must protect score updates.
-8. Team authentication must be securely implemented.
-9. Admin endpoints must require administrator authorization.
-10. One team must not be able to access another team's private information.
-
----
-
-## 9. Local Network Deployment
-
-The application is intended to run on a computer connected to the college network.
-
-Example configuration:
-
-| Service    | Address                    |
-| ---------- | -------------------------- |
-| Frontend   | `http://192.168.1.20:5173` |
-| Backend    | `http://192.168.1.20:4000` |
-| PostgreSQL | `127.0.0.1:5432`           |
-| Memurai    | `127.0.0.1:6379`           |
-
-The IP address above is an example. The actual address must be determined from the host computer.
-
-Students will access the frontend using the host computer's LAN IP.
-
-The backend and database should remain accessible only to authorized services and devices as appropriate.
-
-### Network considerations
-
-- All student devices must connect to the intended campus Wi-Fi network.
-- Windows Firewall must permit the required application traffic.
-- The router must support the expected number of simultaneous clients.
-- The development proxy must be configured for the actual LAN address.
-- Local HTTP is not a secure context for all browser camera and PWA capabilities.
-- Trusted local HTTPS may be required for reliable camera and service-worker functionality.
-
----
-
-## 10. Project Folder Structure
-
-The planned project organization is:
-
-```text
-campus-quest/
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── layouts/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── types/
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── package.json
-│   └── vite.config.ts
-│
+``` text
+campus-quest-starter/
 ├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── middleware/
-│   │   ├── sockets/
-│   │   ├── utils/
-│   │   └── server.ts
-│   ├── .env
-│   └── package.json
-│
-├── database/
-│   └── schema.sql
-│
-├── docs/
-│
-└── README.md
+└── frontend/
 ```
 
-This is the intended organized structure; some folders and modules will be added as development progresses.
+### 3.2 Start the database and cache services
 
----
+Before starting the application:
 
-## 11. Development Commands
+1.  Start the PostgreSQL service.
+2.  Start the Memurai service.
+3.  Confirm that the database and cache are running.
 
-### Backend
+The configured local service ports are:
 
-```powershell
-cd backend
+  Service                                Port
+  ------------------------------------ ------
+  PostgreSQL                             5432
+  Memurai / Redis-compatible service     6379
+  Backend API                            4000
+  Frontend development server            5174
+
+The database must already exist and the project migrations must already
+have been applied. Do not rerun the initial schema or migration scripts
+on an already-migrated development database without first checking the
+database state and taking a backup.
+
+### 3.3 Configure the backend environment
+
+Open the backend folder:
+
+``` powershell
+cd "$env:USERPROFILE\Downloads\campus-quest-starter\backend"
+```
+
+The backend uses a local `.env` file. It must contain the correct values
+for the PostgreSQL connection, Redis-compatible service, frontend origin
+and authentication secret.
+
+The frontend origin currently configured for local development is:
+
+``` text
+http://localhost:5174
+```
+
+**Security:** Do not paste `.env` contents into chat, commit `.env` to
+GitHub, or share database passwords, authentication secrets, team PINs,
+bearer tokens or QR tokens. Keep secrets in local environment files and
+provide a safe `.env.example` containing placeholders only.
+
+Install dependencies if this is the first run or dependencies have
+changed:
+
+``` powershell
 npm install
+```
+
+Check backend TypeScript:
+
+``` powershell
 npm run typecheck
+```
+
+Start the backend development server:
+
+``` powershell
 npm run dev
 ```
 
-Backend health check:
+Keep this PowerShell window open while using the application.
 
-```powershell
-Invoke-RestMethod http://127.0.0.1:4000/api/health
+### 3.4 Check backend health
+
+Open a **second PowerShell window** and run:
+
+``` powershell
+Invoke-RestMethod http://localhost:4000/api/health
 ```
 
-### Frontend
+The expected healthy response reports:
 
-```powershell
-cd frontend
+-   Overall status: `ok`
+-   Database: `ok`
+-   Cache: `ok`
+
+This confirms service connectivity. It does not mean that every game
+feature or security requirement is complete.
+
+### 3.5 Start the frontend
+
+Open a **third PowerShell window**:
+
+``` powershell
+cd "$env:USERPROFILE\Downloads\campus-quest-starter\frontend"
+```
+
+Install dependencies if needed:
+
+``` powershell
 npm install
-npm run typecheck
+```
+
+Start the Vite development server:
+
+``` powershell
 npm run dev
 ```
 
-Open:
+Open the URL printed by Vite. The current development URL is:
 
-`http://localhost:5173`
+``` text
+http://localhost:5174
+```
 
-### Database
+Keep the frontend terminal open too.
 
-PostgreSQL runs on port `5432`.
+### 3.6 Running checklist
 
-Memurai runs on port `6379`.
+  Check                Expected result
+  -------------------- -----------------------------------------------
+  PostgreSQL service   Running
+  Memurai service      Running
+  Backend terminal     Development server running on port 4000
+  Health endpoint      Database and cache checks report `ok`
+  Frontend terminal    Vite development server running
+  Browser              Campus Quest opens at `http://localhost:5174`
 
-Do not share the backend `.env` file or commit credentials to Git.
+To stop a development server, focus its terminal and press `Ctrl + C`.
 
----
+### 3.7 Important: local development versus college Wi-Fi
 
-## 12. Final Project Goal
+`localhost` works only on the computer running the application. For
+students to access the application over college Wi-Fi, the frontend and
+backend must be configured for the host computer's LAN address, the
+backend CORS origin must be updated, and the required firewall rules
+must be configured.
 
-Campus Quest aims to provide a complete college treasure hunt platform where approximately 200 students can participate in 40 teams using one smartphone per team.
+Do not simply expose the development server to the public internet.
+Before a live event, use a tested deployment configuration, restrict
+database access, and configure HTTPS where required. Browser camera
+access and PWA service-worker features may require a secure context such
+as HTTPS.
 
-The completed system will support:
+------------------------------------------------------------------------
 
-- Team registration and authentication.
-- QR-based checkpoint discovery.
-- Clue and answer challenges.
-- Automated scoring.
-- Four knockout competition rounds.
-- Live leaderboards.
-- Administrative event management.
-- Mobile-friendly participation.
-- Local-network deployment.
+## 4. Functionality currently implemented
 
-**Current development stage:** Infrastructure setup and initial frontend prototype completed. Full application functionality, security implementation, event management and load testing remain in progress.
+The following status reflects the development work completed so far. A
+working API does not automatically mean that its corresponding screen is
+fully connected to the API.
+
+### 4.1 Backend and infrastructure
+
+  -----------------------------------------------------------------------
+  Feature                 Current status          Notes
+  ----------------------- ----------------------- -----------------------
+  Node.js / Fastify       Implemented             Backend starts on port
+  backend                                         4000
+
+  PostgreSQL connection   Implemented and tested  Database health check
+                                                  succeeded
+
+  Memurai connection      Implemented and tested  Cache health check
+                                                  succeeded
+
+  Health API              Working                 `/api/health`
+
+  Database schema         Applied                 Tables for teams,
+                                                  rounds, challenges, QR,
+                                                  submissions, scores and
+                                                  related records exist
+
+  Team registration API   Implemented and tested  Creates team and
+                                                  participant records
+
+  Team login API          Implemented and tested  Returns a signed team
+                                                  token
+
+  Team authentication     Implemented             Protects team routes
+  middleware                                      that use the middleware
+
+  Round listing API       Implemented             Returns configured
+                                                  rounds and their
+                                                  statuses
+
+  Round activation        Implemented and tested  Enforces previous-round
+                                                  completion and one
+                                                  active round
+
+  Round completion and    Implemented and tested  Supports percentage or
+  qualification                                   exact-number
+                                                  qualification
+
+  Challenge management    Implemented             Create, update,
+  APIs                                            activate/deactivate and
+                                                  delete where allowed
+
+  QR checkpoint creation  Implemented and tested  Stores a hash of the QR
+                                                  token
+
+  QR scan validation API  Implemented and tested  Checks team and
+                                                  checkpoint eligibility;
+                                                  duplicate scan is
+                                                  prevented
+
+  Answer submission API   Implemented and tested  Server-side answer
+                                                  checking and score
+                                                  recording
+
+  Leaderboard API         Implemented and tested  Returns rankings and
+                                                  scores by round
+
+  Socket.IO leaderboard   Implemented and tested  Frontend can refresh
+  updates                                         the leaderboard when an
+                                                  update is broadcast
+
+  Round status            Partially implemented   Activation notification
+  notifications                                   is in place; completion
+                                                  notification and
+                                                  end-to-end verification
+                                                  remain
+
+  Admin authentication    Not completed           Management routes must
+                                                  not be treated as
+                                                  secured
+  -----------------------------------------------------------------------
+
+### 4.2 Frontend
+
+  -----------------------------------------------------------------------
+  Feature                 Current status          Notes
+  ----------------------- ----------------------- -----------------------
+  React + TypeScript +    Implemented             Development app runs on
+  Vite setup                                      port 5174
+
+  Initial landing /       Implemented             UI prototype exists
+  dashboard prototype                             
+
+  Round control display   Implemented as a        Displays round status;
+                          prototype               backend status loading
+                                                  is being integrated
+
+  Team registration       Prototype implemented   Verify full API
+  screen                                          integration before
+                                                  event
+
+  Team login screen       Prototype implemented   Do not use demo
+                                                  credentials for a live
+                                                  event
+
+  Team dashboard          Basic prototype         Further API integration
+                                                  required
+
+  Leaderboard display     Implemented and         Live score refresh was
+                          connected               tested
+
+  Round status refresh    Integration added       Verify after build and
+                                                  backend
+                                                  completion-event
+                                                  broadcast
+
+  Admin dashboard         Prototype               Some controls still use
+                                                  local frontend state
+
+  Challenge management UI Not fully connected     Backend APIs exist;
+                                                  connect the UI
+
+  QR camera scanning      Not completed in        Backend QR scan API
+                          frontend                exists; browser camera
+                                                  scanner still needs
+                                                  integration
+
+  PWA/mobile installation Not event-validated     Test installation,
+                                                  camera and
+                                                  offline/connection
+                                                  behavior on target
+                                                  devices
+  -----------------------------------------------------------------------
+
+### 4.3 Current round configuration
+
+The current application has **three configured rounds**, not the four
+rounds mentioned in the original planning draft.
+
+  Round   Name                Current development status
+  ------- ------------------- ----------------------------
+  1       Puzzle Hunt         COMPLETED
+  2       Mystery Challenge   ACTIVE
+  3       Ultimate QR Quest   LOCKED
+
+Round 2 has a test challenge and has been used to verify a 50-point
+leaderboard update. Keep this test round active unless intentionally
+resetting or progressing the test data.
+
+------------------------------------------------------------------------
+
+## 5. How the game is intended to work
+
+1.  The organizer prepares teams, rounds, challenges and QR checkpoints.
+2.  Each team registers and uses its team credentials to log in.
+3.  The team opens its dashboard on one smartphone.
+4.  The team follows the clue or location hint.
+5.  The team scans the QR checkpoint.
+6.  The backend validates the QR token and whether the team is allowed
+    to access it.
+7.  The challenge is presented to the team.
+8.  The team submits its answer.
+9.  The backend checks the answer and records the result and points.
+10. The leaderboard is refreshed through the real-time update mechanism.
+11. When a round is completed, the backend calculates qualification
+    according to the configured rule.
+12. Qualified teams proceed to the next round when the organizer
+    activates it.
+
+The exact event rules---attempt limits, penalties, time limits,
+tie-breakers and checkpoint order---must be finalized and implemented
+before the live event.
+
+------------------------------------------------------------------------
+
+## 6. Main application modules
+
+### Student-facing modules
+
+1.  **Landing page:** Event introduction, instructions and entry points.
+2.  **Team registration:** Team name and participant details.
+3.  **Team login:** Team code and PIN-based login.
+4.  **Team dashboard:** Team details, current round and progress.
+5.  **QR checkpoint:** Scan a physical checkpoint and validate it with
+    the server.
+6.  **Challenge page:** Display clues and questions.
+7.  **Answer submission:** Submit an answer and receive validation
+    feedback.
+8.  **Leaderboard:** View team scores and rankings.
+9.  **Round results:** Show qualification and progression information.
+10. **Final results:** Display winners and final rankings.
+
+### Organizer / admin modules
+
+1.  **Admin login and authorization.**
+2.  **Team management:** View, search, activate or deactivate teams.
+3.  **Round management:** Configure, activate and complete rounds.
+4.  **Challenge management:** Create, edit, activate and deactivate
+    challenges.
+5.  **Checkpoint management:** Create checkpoints and generate QR codes.
+6.  **Qualification management:** Configure percentage or exact-number
+    qualification.
+7.  **Submission monitoring:** Review submitted answers and results.
+8.  **Score and leaderboard monitoring.**
+9.  **Announcements and event controls.**
+10. **Results export and event reporting.**
+
+Several of these are planned modules or backend capabilities; they
+should not be described as fully available in the frontend until their
+screens and API connections have been completed and tested.
+
+------------------------------------------------------------------------
+
+## 7. What still needs to be added
+
+### Priority 1 --- Finish the current development workflow
+
+-   [ ] Add and verify `rounds:update` broadcast after a round is
+    completed.
+-   [ ] Verify that the dashboard refreshes after both round activation
+    and completion.
+-   [ ] Connect the round control buttons to backend APIs instead of
+    only changing local React state.
+-   [ ] Connect challenge creation, editing and activation screens to
+    the backend.
+-   [ ] Connect team dashboard data to authenticated backend APIs.
+-   [ ] Connect the QR scan flow to the actual QR scan API.
+-   [ ] Replace demo-only answer submission behavior with the backend
+    submission API wherever it remains in the frontend.
+-   [ ] Show useful loading, success and error messages.
+
+### Priority 2 --- Admin authentication and authorization
+
+-   [ ] Implement secure admin login.
+-   [ ] Protect all admin management endpoints.
+-   [ ] Enforce admin authorization on round, challenge and QR
+    management routes.
+-   [ ] Record important admin actions in audit logs.
+-   [ ] Remove hardcoded demo admin credentials.
+-   [ ] Ensure a team account cannot access another team's private
+    information.
+
+**Important:** Management endpoints currently lack complete admin
+authorization. Keep the system local and for development/testing only.
+Do not deploy it for public or live event use until this is fixed.
+
+### Priority 3 --- Complete student experience
+
+-   [ ] Finish team registration and login UI integration.
+-   [ ] Enforce the intended one-device-per-team policy if required by
+    event rules.
+-   [ ] Complete team dashboard and progress display.
+-   [ ] Integrate browser camera-based QR scanning.
+-   [ ] Add invalid QR, already-scanned QR and ineligible-team messages.
+-   [ ] Complete challenge and answer screens.
+-   [ ] Display current score, rank and qualification status.
+-   [ ] Add event instructions, rules and support information.
+
+### Priority 4 --- Game rules and event controls
+
+-   [ ] Confirm whether the event will use three or four rounds.
+-   [ ] Define checkpoint order and whether checkpoints are
+    team-specific.
+-   [ ] Define answer attempt limits.
+-   [ ] Define penalties, bonuses and time limits.
+-   [ ] Define tie-breaking rules.
+-   [ ] Add event start, pause and stop controls.
+-   [ ] Add countdown and round timer behavior.
+-   [ ] Verify qualification behavior for ties and teams with no score.
+-   [ ] Add final winner calculation and results export.
+
+### Priority 5 --- Security and reliability
+
+-   [ ] Add API rate limiting and request validation.
+-   [ ] Review token expiry, refresh and revocation behavior.
+-   [ ] Secure admin sessions and credentials.
+-   [ ] Restrict CORS to the actual application origin.
+-   [ ] Protect Socket.IO subscriptions and any team-specific
+    information.
+-   [ ] Use database transactions for all score-changing operations.
+-   [ ] Test duplicate requests and idempotency behavior.
+-   [ ] Protect QR tokens and avoid exposing them in logs or source
+    control.
+-   [ ] Configure secure local-network hosting and HTTPS where needed.
+-   [ ] Rotate any development credentials that may have been exposed.
+
+### Priority 6 --- Testing and deployment
+
+-   [ ] Test all three rounds end to end.
+-   [ ] Test registration and login with multiple teams.
+-   [ ] Test valid and invalid QR codes.
+-   [ ] Test duplicate QR scans and duplicate answer submissions.
+-   [ ] Test simultaneous submissions and score consistency.
+-   [ ] Test Socket.IO reconnect behavior.
+-   [ ] Test server restart and recovery.
+-   [ ] Test Android and iOS browsers and camera permissions.
+-   [ ] Test on the actual college Wi-Fi network.
+-   [ ] Load-test the target of approximately 40 teams / 200
+    participants.
+-   [ ] Back up the database and rehearse recovery.
+-   [ ] Conduct a complete mock event before launch.
+
+------------------------------------------------------------------------
+
+## 8. Security and data integrity rules
+
+1.  PostgreSQL is the permanent source of truth.
+2.  The browser must never be trusted to award points or decide
+    qualification.
+3.  QR tokens must be validated by the backend.
+4.  Answers must not be stored in QR codes.
+5.  Duplicate scans and submissions must not award duplicate points.
+6.  Score updates and submissions must use appropriate database
+    transactions and idempotency protection.
+7.  Admin routes must require authenticated administrator authorization.
+8.  Team routes must verify the authenticated team.
+9.  Secrets must not be committed to GitHub.
+10. The application must be tested under realistic concurrent usage
+    before the event.
+
+------------------------------------------------------------------------
+
+## 9. Local network deployment overview
+
+During development, the frontend is accessed at `http://localhost:5174`
+and the backend at `http://localhost:4000`.
+
+For a college event, students need to access the frontend through the
+host computer's LAN IP address, for example:
+
+``` text
+http://192.168.1.20:5174
+```
+
+This is only an example. Find the actual host computer IP address on the
+event network. The frontend API and Socket.IO URLs, backend CORS
+configuration, firewall rules and hosting setup must all be changed and
+tested for that network.
+
+Do not expose PostgreSQL or Memurai directly to student devices. Only
+expose the application services that students need. Use a
+production-ready server/reverse-proxy configuration rather than relying
+on the Vite development server for a live event.
+
+------------------------------------------------------------------------
+
+## 10. Git and GitHub
+
+From the project root:
+
+``` powershell
+cd "$env:USERPROFILE\Downloads\campus-quest-starter"
+git status
+git remote -v
+git branch --show-current
+```
+
+Before committing, confirm that `.gitignore` excludes secrets and
+generated dependencies/build output. At minimum, review entries such as:
+
+``` gitignore
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+```
+
+Review the files before staging:
+
+``` powershell
+git add .
+git status
+```
+
+Only commit if no passwords, tokens, database dumps or other sensitive
+files are staged:
+
+``` powershell
+git commit -m "Update Campus Quest functionality and documentation"
+git push
+```
+
+If the branch has no upstream configured, use the upstream command for
+the actual branch name, for example:
+
+``` powershell
+git push -u origin main
+```
+
+Do not assume the branch is named `main`; check it with
+`git branch --show-current`.
+
+------------------------------------------------------------------------
+
+## 11. Final status
+
+Campus Quest has a working local development foundation: PostgreSQL and
+cache connectivity, a Fastify API, React frontend, team
+registration/login APIs, round and challenge management APIs, QR token
+validation, answer submission, qualification logic and a live
+leaderboard test.
+
+It is **not yet ready for a live college event**. The main remaining
+work is to complete frontend-to-backend integration, camera-based QR
+scanning, admin authentication and authorization, security hardening,
+full end-to-end testing and local-network deployment.
+
+The next recommended development sequence is:
+
+1.  Finish round status real-time updates.
+2.  Connect round and challenge management UI to the backend.
+3.  Connect student dashboard and answer submission UI.
+4.  Integrate the camera QR scanner.
+5.  Implement admin authentication and authorization.
+6.  Complete security, load testing and event-day deployment rehearsal.
